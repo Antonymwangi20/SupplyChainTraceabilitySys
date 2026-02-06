@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/mwangi/Projects/supply-chain-traceability/hardhat/contracts/SupplyChain.sol": {
-      "lastModificationDate": 1770319275455,
-      "contentHash": "2b568032335a73f45d2382c44dcc3998",
+      "lastModificationDate": 1770384030122,
+      "contentHash": "a1c8d50bc49a2d5ad3215790f7fb2b84",
       "sourceName": "contracts/SupplyChain.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -45,8 +45,8 @@
       ]
     },
     "/home/mwangi/Projects/supply-chain-traceability/hardhat/contracts/SupplyChainBatch.sol": {
-      "lastModificationDate": 1770317543564,
-      "contentHash": "075caa1041af1e0fdbd6028833685ecd",
+      "lastModificationDate": 1770382236203,
+      "contentHash": "38e8d379028d0a6a32a315680dc2d8fd",
       "sourceName": "contracts/SupplyChainBatch.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -79,8 +79,8 @@
       "artifacts": []
     },
     "/home/mwangi/Projects/supply-chain-traceability/hardhat/contracts/SupplyChainRoles.sol": {
-      "lastModificationDate": 1770317455837,
-      "contentHash": "53ae7491b8fac7ca4011adac2e6f1335",
+      "lastModificationDate": 1770382239631,
+      "contentHash": "c263f364b808fc6c36e83a4a0c8fbb95",
       "sourceName": "contracts/SupplyChainRoles.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -117,8 +117,8 @@
       ]
     },
     "/home/mwangi/Projects/supply-chain-traceability/hardhat/contracts/interfaces/ISupplyChain.sol": {
-      "lastModificationDate": 1770317624885,
-      "contentHash": "7b5b7daeebc9363863e634847ce73597",
+      "lastModificationDate": 1770383999510,
+      "contentHash": "c34f707b82bd58bf8f66a7425b44b8af",
       "sourceName": "contracts/interfaces/ISupplyChain.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -153,8 +153,8 @@
       ]
     },
     "/home/mwangi/Projects/supply-chain-traceability/hardhat/contracts/errors/SupplyChainErrors.sol": {
-      "lastModificationDate": 1770317726543,
-      "contentHash": "54ff99dbf2b201fb0ddd406e9d528cd9",
+      "lastModificationDate": 1770383013978,
+      "contentHash": "885e602fc76aed307c072cda94373d73",
       "sourceName": "contracts/errors/SupplyChainErrors.sol",
       "solcConfig": {
         "version": "0.8.24",

@@ -30,22 +30,32 @@ export interface SupplyChainInterface extends Interface {
       | "DISTRIBUTOR"
       | "INSPECTOR"
       | "MANUFACTURER"
+      | "TRANSFER_TIMEOUT"
       | "acceptTransfer"
       | "acceptTransferWithSig"
+      | "approveRelayer"
+      | "approvedRelayers"
       | "batches"
       | "eip712Domain"
+      | "executeMetaTx"
+      | "getBatchMetadata"
+      | "getBatchProductCount"
+      | "getBatchStatus"
       | "getRoleAdmin"
       | "grantRole"
       | "grantRoleSafe"
       | "hasRole"
       | "initiateTransfer"
       | "initiateTransferWithSig"
+      | "isDisputeActive"
       | "mintProduct"
       | "nonces"
       | "ownerOf"
       | "productBatch"
+      | "raiseDispute"
       | "registerBatch"
       | "renounceRole"
+      | "resolveDispute"
       | "revokeRole"
       | "supportsInterface"
   ): FunctionFragment;
@@ -53,8 +63,14 @@ export interface SupplyChainInterface extends Interface {
   getEvent(
     nameOrSignatureOrTopic:
       | "BatchRegistered"
+      | "BatchStatusChanged"
+      | "DisputeRaised"
+      | "DisputeResolved"
       | "EIP712DomainChanged"
+      | "MetaTxExecuted"
       | "ProductMinted"
+      | "ProvenanceRecorded"
+      | "RelayerApproved"
       | "RoleAdminChanged"
       | "RoleGranted"
       | "RoleRevoked"
@@ -76,6 +92,10 @@ export interface SupplyChainInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "TRANSFER_TIMEOUT",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "acceptTransfer",
     values: [BigNumberish]
   ): string;
@@ -84,12 +104,44 @@ export interface SupplyChainInterface extends Interface {
     values: [BigNumberish, BigNumberish, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "approveRelayer",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "approvedRelayers",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "batches",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "eip712Domain",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "executeMetaTx",
+    values: [
+      AddressLike,
+      BigNumberish,
+      AddressLike,
+      BytesLike,
+      BigNumberish,
+      BigNumberish,
+      BytesLike
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getBatchMetadata",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getBatchProductCount",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getBatchStatus",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getRoleAdmin",
@@ -123,6 +175,10 @@ export interface SupplyChainInterface extends Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "isDisputeActive",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "mintProduct",
     values: [BigNumberish, BigNumberish, BytesLike]
   ): string;
@@ -136,12 +192,20 @@ export interface SupplyChainInterface extends Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "raiseDispute",
+    values: [BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "registerBatch",
     values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
     values: [BytesLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "resolveDispute",
+    values: [BigNumberish, AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "revokeRole",
@@ -166,6 +230,10 @@ export interface SupplyChainInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "TRANSFER_TIMEOUT",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "acceptTransfer",
     data: BytesLike
   ): Result;
@@ -173,9 +241,33 @@ export interface SupplyChainInterface extends Interface {
     functionFragment: "acceptTransferWithSig",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "approveRelayer",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "approvedRelayers",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "batches", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "eip712Domain",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "executeMetaTx",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getBatchMetadata",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getBatchProductCount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getBatchStatus",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -197,6 +289,10 @@ export interface SupplyChainInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "isDisputeActive",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "mintProduct",
     data: BytesLike
   ): Result;
@@ -207,11 +303,19 @@ export interface SupplyChainInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "raiseDispute",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "registerBatch",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "renounceRole",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "resolveDispute",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
@@ -246,10 +350,100 @@ export namespace BatchRegisteredEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
+export namespace BatchStatusChangedEvent {
+  export type InputTuple = [
+    batchId: BigNumberish,
+    status: string,
+    timestamp: BigNumberish
+  ];
+  export type OutputTuple = [
+    batchId: bigint,
+    status: string,
+    timestamp: bigint
+  ];
+  export interface OutputObject {
+    batchId: bigint;
+    status: string;
+    timestamp: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace DisputeRaisedEvent {
+  export type InputTuple = [
+    productId: BigNumberish,
+    disputer: AddressLike,
+    reason: string,
+    timestamp: BigNumberish
+  ];
+  export type OutputTuple = [
+    productId: bigint,
+    disputer: string,
+    reason: string,
+    timestamp: bigint
+  ];
+  export interface OutputObject {
+    productId: bigint;
+    disputer: string;
+    reason: string;
+    timestamp: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace DisputeResolvedEvent {
+  export type InputTuple = [
+    productId: BigNumberish,
+    winner: AddressLike,
+    slashedAmount: BigNumberish,
+    timestamp: BigNumberish
+  ];
+  export type OutputTuple = [
+    productId: bigint,
+    winner: string,
+    slashedAmount: bigint,
+    timestamp: bigint
+  ];
+  export interface OutputObject {
+    productId: bigint;
+    winner: string;
+    slashedAmount: bigint;
+    timestamp: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
 export namespace EIP712DomainChangedEvent {
   export type InputTuple = [];
   export type OutputTuple = [];
   export interface OutputObject {}
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace MetaTxExecutedEvent {
+  export type InputTuple = [
+    relayer: AddressLike,
+    user: AddressLike,
+    nonce: BigNumberish
+  ];
+  export type OutputTuple = [relayer: string, user: string, nonce: bigint];
+  export interface OutputObject {
+    relayer: string;
+    user: string;
+    nonce: bigint;
+  }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
   export type Log = TypedEventLog<Event>;
@@ -274,6 +468,47 @@ export namespace ProductMintedEvent {
     batchId: bigint;
     owner: string;
     metadataHash: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace ProvenanceRecordedEvent {
+  export type InputTuple = [
+    productId: BigNumberish,
+    handler: AddressLike,
+    locationHash: BytesLike,
+    action: string,
+    timestamp: BigNumberish
+  ];
+  export type OutputTuple = [
+    productId: bigint,
+    handler: string,
+    locationHash: string,
+    action: string,
+    timestamp: bigint
+  ];
+  export interface OutputObject {
+    productId: bigint;
+    handler: string;
+    locationHash: string;
+    action: string;
+    timestamp: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace RelayerApprovedEvent {
+  export type InputTuple = [relayer: AddressLike, approved: boolean];
+  export type OutputTuple = [relayer: string, approved: boolean];
+  export interface OutputObject {
+    relayer: string;
+    approved: boolean;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -433,6 +668,8 @@ export interface SupplyChain extends BaseContract {
 
   MANUFACTURER: TypedContractMethod<[], [string], "view">;
 
+  TRANSFER_TIMEOUT: TypedContractMethod<[], [bigint], "view">;
+
   acceptTransfer: TypedContractMethod<
     [productId: BigNumberish],
     [void],
@@ -449,6 +686,14 @@ export interface SupplyChain extends BaseContract {
     [void],
     "nonpayable"
   >;
+
+  approveRelayer: TypedContractMethod<
+    [relayer: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  approvedRelayers: TypedContractMethod<[arg0: AddressLike], [boolean], "view">;
 
   batches: TypedContractMethod<
     [arg0: BigNumberish],
@@ -477,6 +722,46 @@ export interface SupplyChain extends BaseContract {
         extensions: bigint[];
       }
     ],
+    "view"
+  >;
+
+  executeMetaTx: TypedContractMethod<
+    [
+      user: AddressLike,
+      productId: BigNumberish,
+      to: AddressLike,
+      locationHash: BytesLike,
+      nonce: BigNumberish,
+      deadline: BigNumberish,
+      signature: BytesLike
+    ],
+    [void],
+    "nonpayable"
+  >;
+
+  getBatchMetadata: TypedContractMethod<
+    [batchId: BigNumberish],
+    [
+      [string, bigint, bigint, bigint, string] & {
+        manufacturer: string;
+        maxUnits: bigint;
+        minted: bigint;
+        stake: bigint;
+        status: string;
+      }
+    ],
+    "view"
+  >;
+
+  getBatchProductCount: TypedContractMethod<
+    [batchId: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
+  getBatchStatus: TypedContractMethod<
+    [batchId: BigNumberish],
+    [string],
     "view"
   >;
 
@@ -519,6 +804,12 @@ export interface SupplyChain extends BaseContract {
     "nonpayable"
   >;
 
+  isDisputeActive: TypedContractMethod<
+    [productId: BigNumberish],
+    [boolean],
+    "view"
+  >;
+
   mintProduct: TypedContractMethod<
     [productId: BigNumberish, batchId: BigNumberish, metadataHash: BytesLike],
     [void],
@@ -535,6 +826,12 @@ export interface SupplyChain extends BaseContract {
     "view"
   >;
 
+  raiseDispute: TypedContractMethod<
+    [productId: BigNumberish, reasonHash: BytesLike],
+    [void],
+    "nonpayable"
+  >;
+
   registerBatch: TypedContractMethod<
     [batchId: BigNumberish, maxUnits: BigNumberish],
     [void],
@@ -543,6 +840,12 @@ export interface SupplyChain extends BaseContract {
 
   renounceRole: TypedContractMethod<
     [role: BytesLike, callerConfirmation: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  resolveDispute: TypedContractMethod<
+    [productId: BigNumberish, winner: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -576,6 +879,9 @@ export interface SupplyChain extends BaseContract {
     nameOrSignature: "MANUFACTURER"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "TRANSFER_TIMEOUT"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "acceptTransfer"
   ): TypedContractMethod<[productId: BigNumberish], [void], "nonpayable">;
   getFunction(
@@ -590,6 +896,12 @@ export interface SupplyChain extends BaseContract {
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "approveRelayer"
+  ): TypedContractMethod<[relayer: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "approvedRelayers"
+  ): TypedContractMethod<[arg0: AddressLike], [boolean], "view">;
   getFunction(
     nameOrSignature: "batches"
   ): TypedContractMethod<
@@ -622,6 +934,42 @@ export interface SupplyChain extends BaseContract {
     ],
     "view"
   >;
+  getFunction(
+    nameOrSignature: "executeMetaTx"
+  ): TypedContractMethod<
+    [
+      user: AddressLike,
+      productId: BigNumberish,
+      to: AddressLike,
+      locationHash: BytesLike,
+      nonce: BigNumberish,
+      deadline: BigNumberish,
+      signature: BytesLike
+    ],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "getBatchMetadata"
+  ): TypedContractMethod<
+    [batchId: BigNumberish],
+    [
+      [string, bigint, bigint, bigint, string] & {
+        manufacturer: string;
+        maxUnits: bigint;
+        minted: bigint;
+        stake: bigint;
+        status: string;
+      }
+    ],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "getBatchProductCount"
+  ): TypedContractMethod<[batchId: BigNumberish], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "getBatchStatus"
+  ): TypedContractMethod<[batchId: BigNumberish], [string], "view">;
   getFunction(
     nameOrSignature: "getRoleAdmin"
   ): TypedContractMethod<[role: BytesLike], [string], "view">;
@@ -668,6 +1016,9 @@ export interface SupplyChain extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "isDisputeActive"
+  ): TypedContractMethod<[productId: BigNumberish], [boolean], "view">;
+  getFunction(
     nameOrSignature: "mintProduct"
   ): TypedContractMethod<
     [productId: BigNumberish, batchId: BigNumberish, metadataHash: BytesLike],
@@ -684,6 +1035,13 @@ export interface SupplyChain extends BaseContract {
     nameOrSignature: "productBatch"
   ): TypedContractMethod<[productId: BigNumberish], [bigint], "view">;
   getFunction(
+    nameOrSignature: "raiseDispute"
+  ): TypedContractMethod<
+    [productId: BigNumberish, reasonHash: BytesLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "registerBatch"
   ): TypedContractMethod<
     [batchId: BigNumberish, maxUnits: BigNumberish],
@@ -694,6 +1052,13 @@ export interface SupplyChain extends BaseContract {
     nameOrSignature: "renounceRole"
   ): TypedContractMethod<
     [role: BytesLike, callerConfirmation: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "resolveDispute"
+  ): TypedContractMethod<
+    [productId: BigNumberish, winner: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -716,6 +1081,27 @@ export interface SupplyChain extends BaseContract {
     BatchRegisteredEvent.OutputObject
   >;
   getEvent(
+    key: "BatchStatusChanged"
+  ): TypedContractEvent<
+    BatchStatusChangedEvent.InputTuple,
+    BatchStatusChangedEvent.OutputTuple,
+    BatchStatusChangedEvent.OutputObject
+  >;
+  getEvent(
+    key: "DisputeRaised"
+  ): TypedContractEvent<
+    DisputeRaisedEvent.InputTuple,
+    DisputeRaisedEvent.OutputTuple,
+    DisputeRaisedEvent.OutputObject
+  >;
+  getEvent(
+    key: "DisputeResolved"
+  ): TypedContractEvent<
+    DisputeResolvedEvent.InputTuple,
+    DisputeResolvedEvent.OutputTuple,
+    DisputeResolvedEvent.OutputObject
+  >;
+  getEvent(
     key: "EIP712DomainChanged"
   ): TypedContractEvent<
     EIP712DomainChangedEvent.InputTuple,
@@ -723,11 +1109,32 @@ export interface SupplyChain extends BaseContract {
     EIP712DomainChangedEvent.OutputObject
   >;
   getEvent(
+    key: "MetaTxExecuted"
+  ): TypedContractEvent<
+    MetaTxExecutedEvent.InputTuple,
+    MetaTxExecutedEvent.OutputTuple,
+    MetaTxExecutedEvent.OutputObject
+  >;
+  getEvent(
     key: "ProductMinted"
   ): TypedContractEvent<
     ProductMintedEvent.InputTuple,
     ProductMintedEvent.OutputTuple,
     ProductMintedEvent.OutputObject
+  >;
+  getEvent(
+    key: "ProvenanceRecorded"
+  ): TypedContractEvent<
+    ProvenanceRecordedEvent.InputTuple,
+    ProvenanceRecordedEvent.OutputTuple,
+    ProvenanceRecordedEvent.OutputObject
+  >;
+  getEvent(
+    key: "RelayerApproved"
+  ): TypedContractEvent<
+    RelayerApprovedEvent.InputTuple,
+    RelayerApprovedEvent.OutputTuple,
+    RelayerApprovedEvent.OutputObject
   >;
   getEvent(
     key: "RoleAdminChanged"
@@ -777,6 +1184,39 @@ export interface SupplyChain extends BaseContract {
       BatchRegisteredEvent.OutputObject
     >;
 
+    "BatchStatusChanged(uint256,string,uint256)": TypedContractEvent<
+      BatchStatusChangedEvent.InputTuple,
+      BatchStatusChangedEvent.OutputTuple,
+      BatchStatusChangedEvent.OutputObject
+    >;
+    BatchStatusChanged: TypedContractEvent<
+      BatchStatusChangedEvent.InputTuple,
+      BatchStatusChangedEvent.OutputTuple,
+      BatchStatusChangedEvent.OutputObject
+    >;
+
+    "DisputeRaised(uint256,address,string,uint256)": TypedContractEvent<
+      DisputeRaisedEvent.InputTuple,
+      DisputeRaisedEvent.OutputTuple,
+      DisputeRaisedEvent.OutputObject
+    >;
+    DisputeRaised: TypedContractEvent<
+      DisputeRaisedEvent.InputTuple,
+      DisputeRaisedEvent.OutputTuple,
+      DisputeRaisedEvent.OutputObject
+    >;
+
+    "DisputeResolved(uint256,address,uint256,uint256)": TypedContractEvent<
+      DisputeResolvedEvent.InputTuple,
+      DisputeResolvedEvent.OutputTuple,
+      DisputeResolvedEvent.OutputObject
+    >;
+    DisputeResolved: TypedContractEvent<
+      DisputeResolvedEvent.InputTuple,
+      DisputeResolvedEvent.OutputTuple,
+      DisputeResolvedEvent.OutputObject
+    >;
+
     "EIP712DomainChanged()": TypedContractEvent<
       EIP712DomainChangedEvent.InputTuple,
       EIP712DomainChangedEvent.OutputTuple,
@@ -788,6 +1228,17 @@ export interface SupplyChain extends BaseContract {
       EIP712DomainChangedEvent.OutputObject
     >;
 
+    "MetaTxExecuted(address,address,uint256)": TypedContractEvent<
+      MetaTxExecutedEvent.InputTuple,
+      MetaTxExecutedEvent.OutputTuple,
+      MetaTxExecutedEvent.OutputObject
+    >;
+    MetaTxExecuted: TypedContractEvent<
+      MetaTxExecutedEvent.InputTuple,
+      MetaTxExecutedEvent.OutputTuple,
+      MetaTxExecutedEvent.OutputObject
+    >;
+
     "ProductMinted(uint256,uint256,address,bytes32)": TypedContractEvent<
       ProductMintedEvent.InputTuple,
       ProductMintedEvent.OutputTuple,
@@ -797,6 +1248,28 @@ export interface SupplyChain extends BaseContract {
       ProductMintedEvent.InputTuple,
       ProductMintedEvent.OutputTuple,
       ProductMintedEvent.OutputObject
+    >;
+
+    "ProvenanceRecorded(uint256,address,bytes32,string,uint256)": TypedContractEvent<
+      ProvenanceRecordedEvent.InputTuple,
+      ProvenanceRecordedEvent.OutputTuple,
+      ProvenanceRecordedEvent.OutputObject
+    >;
+    ProvenanceRecorded: TypedContractEvent<
+      ProvenanceRecordedEvent.InputTuple,
+      ProvenanceRecordedEvent.OutputTuple,
+      ProvenanceRecordedEvent.OutputObject
+    >;
+
+    "RelayerApproved(address,bool)": TypedContractEvent<
+      RelayerApprovedEvent.InputTuple,
+      RelayerApprovedEvent.OutputTuple,
+      RelayerApprovedEvent.OutputObject
+    >;
+    RelayerApproved: TypedContractEvent<
+      RelayerApprovedEvent.InputTuple,
+      RelayerApprovedEvent.OutputTuple,
+      RelayerApprovedEvent.OutputObject
     >;
 
     "RoleAdminChanged(bytes32,bytes32,bytes32)": TypedContractEvent<

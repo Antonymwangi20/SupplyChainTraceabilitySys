@@ -6,6 +6,18 @@ This is **not** a magic anti-counterfeiting solution. It is an **audit and accou
 
 ---
 
+## Key Features
+
+✅ **Two-Step Transfer Invariants**: Ownership changes only with explicit acceptance; eliminates forced custody  
+✅ **Stake-Based Slashing**: Manufacturers post collateral; slashing deters fraud  
+✅ **Event-Only Provenance**: Complete audit trail via blockchain events (gas-efficient)  
+✅ **Dispute Resolution**: Permissionless raising, admin-controlled resolution with stake recovery  
+✅ **Gasless Transfers**: EIP-712 meta-transactions via relayer network  
+✅ **Batch Status Tracking**: Enum-based status (CREATED → FULLY_MINTED) with compiler enforcement  
+✅ **Transfer Timeouts**: 3-day window prevents indefinite pending states  
+
+---
+
 ## What this system is
 
 * A **multi-party ledger** for product lifecycle events
@@ -16,11 +28,11 @@ This is **not** a magic anti-counterfeiting solution. It is an **audit and accou
 Built on:
 
 * **Ethereum-compatible blockchain** (EVM)
-* **Solidity smart contracts**
+* **Solidity smart contracts** (v0.8.24)
 * **Hardhat** for development and testing
-* **IPFS** for off-chain metadata
-* **Event indexing (The Graph)** for scalable reads
-* **Relayer-based meta-transactions** for UX
+* **EIP-712** for secure meta-transactions
+* **Event indexing** for scalable provenance queries
+* **Relayer infrastructure** for gasless UX
 
 ---
 
@@ -41,6 +53,10 @@ If one trusted entity controls all parties, a centralized database would be simp
 * Cryptographic proof of authorship (signatures)
 * No unilateral history rewriting
 * Public verifiability without trusting a central operator
+* **Transfer safety**: No ownership change without acceptance
+* **Economic accountability**: Stake at risk, slashing on disputes
+
+**See [SECURITY.md](SECURITY.md) for detailed threat model and assumptions.**
 
 ---
 

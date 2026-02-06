@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
 error NotAuthorized();
@@ -13,3 +14,7 @@ error NoPendingTransfer();
 error InvalidReceiver();
 error DeadlineExpired();
 error InvalidSignature();
+error DisputeNotActive();
+error DisputeAlreadyResolved();
+error InsufficientStake();
+error NoRelayerApproval();
