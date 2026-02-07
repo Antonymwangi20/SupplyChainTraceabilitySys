@@ -56,7 +56,7 @@ If one trusted entity controls all parties, a centralized database would be simp
 * **Transfer safety**: No ownership change without acceptance
 * **Economic accountability**: Stake at risk, slashing on disputes
 
-**See [SECURITY.md](SECURITY.md) for detailed threat model and assumptions.**
+**See [SECURITY.md](./docs/SECURITY.md) for detailed threat model and assumptions.**
 
 ---
 

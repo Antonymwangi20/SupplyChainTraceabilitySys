@@ -27,15 +27,18 @@ export interface SupplyChainInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "DEFAULT_ADMIN_ROLE"
+      | "DISPUTE_RESOLUTION_WINDOW"
       | "DISTRIBUTOR"
       | "INSPECTOR"
       | "MANUFACTURER"
+      | "REFUND_WINDOW"
       | "TRANSFER_TIMEOUT"
       | "acceptTransfer"
       | "acceptTransferWithSig"
       | "approveRelayer"
       | "approvedRelayers"
       | "batches"
+      | "claimRefund"
       | "eip712Domain"
       | "executeMetaTx"
       | "getBatchMetadata"
@@ -83,12 +86,20 @@ export interface SupplyChainInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "DISPUTE_RESOLUTION_WINDOW",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "DISTRIBUTOR",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "INSPECTOR", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "MANUFACTURER",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "REFUND_WINDOW",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -113,6 +124,10 @@ export interface SupplyChainInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "batches",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "claimRefund",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -221,12 +236,20 @@ export interface SupplyChainInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "DISPUTE_RESOLUTION_WINDOW",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "DISTRIBUTOR",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "INSPECTOR", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "MANUFACTURER",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "REFUND_WINDOW",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -250,6 +273,10 @@ export interface SupplyChainInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "batches", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "claimRefund",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "eip712Domain",
     data: BytesLike
@@ -662,11 +689,15 @@ export interface SupplyChain extends BaseContract {
 
   DEFAULT_ADMIN_ROLE: TypedContractMethod<[], [string], "view">;
 
+  DISPUTE_RESOLUTION_WINDOW: TypedContractMethod<[], [bigint], "view">;
+
   DISTRIBUTOR: TypedContractMethod<[], [string], "view">;
 
   INSPECTOR: TypedContractMethod<[], [string], "view">;
 
   MANUFACTURER: TypedContractMethod<[], [string], "view">;
+
+  REFUND_WINDOW: TypedContractMethod<[], [bigint], "view">;
 
   TRANSFER_TIMEOUT: TypedContractMethod<[], [bigint], "view">;
 
@@ -707,6 +738,12 @@ export interface SupplyChain extends BaseContract {
       }
     ],
     "view"
+  >;
+
+  claimRefund: TypedContractMethod<
+    [productId: BigNumberish],
+    [void],
+    "nonpayable"
   >;
 
   eip712Domain: TypedContractMethod<
@@ -870,6 +907,9 @@ export interface SupplyChain extends BaseContract {
     nameOrSignature: "DEFAULT_ADMIN_ROLE"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "DISPUTE_RESOLUTION_WINDOW"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "DISTRIBUTOR"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
@@ -878,6 +918,9 @@ export interface SupplyChain extends BaseContract {
   getFunction(
     nameOrSignature: "MANUFACTURER"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "REFUND_WINDOW"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "TRANSFER_TIMEOUT"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -917,6 +960,9 @@ export interface SupplyChain extends BaseContract {
     ],
     "view"
   >;
+  getFunction(
+    nameOrSignature: "claimRefund"
+  ): TypedContractMethod<[productId: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "eip712Domain"
   ): TypedContractMethod<

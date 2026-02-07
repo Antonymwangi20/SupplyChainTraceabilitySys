@@ -324,6 +324,19 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "productId",
+        type: "uint256",
+      },
+    ],
+    name: "claimRefund",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "user",
         type: "address",

@@ -36,6 +36,7 @@ interface ISupplyChain {
     // Dispute functions
     function raiseDispute(uint256 productId, bytes32 reasonHash) external;
     function resolveDispute(uint256 productId, address winner) external;
+    function claimRefund(uint256 productId) external;
     function isDisputeActive(uint256 productId) external view returns (bool);
 
     // Relayer functions

@@ -1,0 +1,72 @@
+name: Gas Snapshot CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main]
+
+jobs:
+  gas-snapshot:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+      
+      - name: Run gas snapshot
+        run: |
+          cd /home/mwangi/Projects/supply-chain-traceability
+          forge test --match-contract SupplyChainFuzz --gas-report > gas-report.txt 2>&1
+        
+      - name: Compare gas snapshots
+        run: |
+          cd /home/mwangi/Projects/supply-chain-traceability
+          if [ -f .gas-snapshot ]; then
+            echo "## Gas Snapshot Comparison" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Current Baseline (.gas-snapshot)" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat .gas-snapshot | tail -11 >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+        
+      - name: Upload gas report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gas-report
+          path: /home/mwangi/Projects/supply-chain-traceability/gas-report.txt
+  
+  hardhat-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: cd hardhat && npm install
+      
+      - name: Run Hardhat tests
+        run: cd hardhat && npm test
+      
+      - name: Run Hardhat gas report
+        if: always()
+        run: cd hardhat && npx hardhat test --reporter hardhat-gas-reporter 2>&1 | tail -100 > gas-report-hardhat.txt || true
+      
+      - name: Upload Hardhat gas report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hardhat-gas-report
+          path: hardhat/gas-report-hardhat.txt

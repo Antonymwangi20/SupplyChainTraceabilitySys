@@ -39,6 +39,11 @@ describe("SupplyChain - transfers", function () {
   it("supports EIP-712 meta-tx for initiate and accept", async function () {
     const {sc, manufacturer, receiver, relayer} = await deployFixture();
 
+    // Get current block timestamp and add 24 hours
+    const blockNum = await ethers.provider.getBlockNumber();
+    const block = await ethers.provider.getBlock(blockNum);
+    const deadline = BigInt(block!.timestamp) + BigInt(86400);
+
     const network = await ethers.provider.getNetwork();
     const domain = {
       name: "SupplyChain",
@@ -47,7 +52,6 @@ describe("SupplyChain - transfers", function () {
       verifyingContract: await sc.getAddress()
     };
 
-    const deadline = BigInt(Math.floor(Date.now() / 1000) + 3600);
     const nonceFrom = await sc.nonces(manufacturer.address);
 
     const initiateTypes = {

@@ -28,6 +28,7 @@ export interface ISupplyChainInterface extends Interface {
     nameOrSignature:
       | "acceptTransfer"
       | "approveRelayer"
+      | "claimRefund"
       | "executeMetaTx"
       | "getBatchMetadata"
       | "getBatchProductCount"
@@ -62,6 +63,10 @@ export interface ISupplyChainInterface extends Interface {
   encodeFunctionData(
     functionFragment: "approveRelayer",
     values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "claimRefund",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "executeMetaTx",
@@ -119,6 +124,10 @@ export interface ISupplyChainInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "approveRelayer",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "claimRefund",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -443,6 +452,12 @@ export interface ISupplyChain extends BaseContract {
     "nonpayable"
   >;
 
+  claimRefund: TypedContractMethod<
+    [productId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   executeMetaTx: TypedContractMethod<
     [
       user: AddressLike,
@@ -531,6 +546,9 @@ export interface ISupplyChain extends BaseContract {
   getFunction(
     nameOrSignature: "approveRelayer"
   ): TypedContractMethod<[relayer: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "claimRefund"
+  ): TypedContractMethod<[productId: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "executeMetaTx"
   ): TypedContractMethod<

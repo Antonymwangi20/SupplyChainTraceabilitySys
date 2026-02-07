@@ -51,7 +51,10 @@ contract SupplyChain is ISupplyChain, SupplyChainRoles, EIP712 {
         address disputer;
         bytes32 reasonHash;
         bool active;
+        bool resolved;
         uint256 raisedAt;
+        uint256 refundWindow;
+        uint256 disputableStake;
     }
 
     mapping(uint256 => Batch) public batches;
@@ -68,6 +71,8 @@ contract SupplyChain is ISupplyChain, SupplyChainRoles, EIP712 {
     mapping(address => uint256) public override nonces;
 
     uint256 public constant TRANSFER_TIMEOUT = 3 days;
+    uint256 public constant DISPUTE_RESOLUTION_WINDOW = 7 days;
+    uint256 public constant REFUND_WINDOW = 14 days;
 
     bytes32 private constant INITIATE_TRANSFER_TYPEHASH =
         keccak256(
@@ -217,12 +222,18 @@ contract SupplyChain is ISupplyChain, SupplyChainRoles, EIP712 {
         if (!p.exists) revert ProductNotFound();
         
         Dispute storage d = disputes[productId];
-        if (d.active) revert DisputeAlreadyResolved();
+        if (d.resolved) revert DisputeAlreadyResolved(); // Prevent re-disputes after resolution/refund
+        if (d.active) revert DisputeAlreadyResolved(); // Prevent raising while dispute pending
+        
+        uint256 pStake = productStake[productId];
         
         d.disputer = msg.sender;
         d.reasonHash = reasonHash;
         d.active = true;
+        d.resolved = false;
         d.raisedAt = block.timestamp;
+        d.refundWindow = block.timestamp + REFUND_WINDOW;
+        d.disputableStake = pStake;
 
         emit DisputeRaised(productId, msg.sender, "Dispute raised", block.timestamp);
         emit ProvenanceRecorded(productId, msg.sender, bytes32(0), "DISPUTE_RAISED", block.timestamp);
@@ -231,26 +242,62 @@ contract SupplyChain is ISupplyChain, SupplyChainRoles, EIP712 {
     function resolveDispute(uint256 productId, address winner) external onlyRole(DEFAULT_ADMIN_ROLE) {
         Dispute storage d = disputes[productId];
         if (!d.active) revert DisputeNotActive();
+        if (d.resolved) revert DisputeAlreadyResolved();
+        if (block.timestamp > d.raisedAt + DISPUTE_RESOLUTION_WINDOW) revert DeadlineExpired();
 
+        Product storage p = products[productId];
+        address manufacturer = batches[p.batchId].manufacturer;
+        
         PendingTransfer storage t = pendingTransfers[productId];
         
         uint256 slashedAmount = 0;
         
-        // Slash per-product stake if transfer was initiated
-        if (t.exists) {
-            uint256 pStake = productStake[productId];
-            if (pStake > 0) {
-                slashedAmount = pStake / 2;
+        // If manufacturer wins, refund the disputed stake
+        if (winner == manufacturer) {
+            slashedAmount = d.disputableStake;
+            (bool success, ) = payable(manufacturer).call{value: slashedAmount}("");
+            require(success, "Refund failed");
+            emit ProvenanceRecorded(productId, manufacturer, bytes32(0), "DISPUTE_REFUNDED", block.timestamp);
+        } else {
+            // Slash per-product stake to winner
+            if (t.exists) {
+                slashedAmount = d.disputableStake / 2;
                 productStake[productId] -= slashedAmount;
                 (bool success, ) = payable(winner).call{value: slashedAmount}("");
                 require(success, "Transfer failed");
             }
+        }
+        
+        if (t.exists) {
             delete pendingTransfers[productId];
         }
 
         d.active = false;
+        d.resolved = true;
         emit DisputeResolved(productId, winner, slashedAmount, block.timestamp);
         emit ProvenanceRecorded(productId, winner, bytes32(0), "DISPUTE_RESOLVED", block.timestamp);
+    }
+
+    function claimRefund(uint256 productId) external {
+        Dispute storage d = disputes[productId];
+        if (d.resolved) revert DisputeAlreadyResolved(); // Already resolved, no refund due
+        if (!d.active) revert DisputeNotActive(); // No dispute to claim
+        if (block.timestamp < d.refundWindow) revert DeadlineExpired(); // Refund window not closed yet
+
+        Product storage p = products[productId];
+        if (!p.exists) revert ProductNotFound();
+        
+        address manufacturer = batches[p.batchId].manufacturer;
+        uint256 refundAmount = d.disputableStake;
+
+        d.resolved = true; // Mark as resolved to prevent double-claiming
+        d.active = false;
+        
+        (bool success, ) = payable(manufacturer).call{value: refundAmount}("");
+        require(success, "Refund failed");
+        
+        emit DisputeResolved(productId, manufacturer, refundAmount, block.timestamp);
+        emit ProvenanceRecorded(productId, manufacturer, bytes32(0), "DISPUTE_REFUNDED", block.timestamp);
     }
 
     function isDisputeActive(uint256 productId) external view returns (bool) {
